@@ -345,20 +345,34 @@ function decodeBase64() {
   }
   document.getElementById('pwOutput').textContent = password;
     }
-    const originalStyles = document.documentElement.innerHTML;
-
+  
 function applyStyle(styleName) {
+  resetCustomizations(); // Clean up first
+
   if (styleName === 'blushop') {
-    document.body.style.background = 'linear-gradient(to bottom right, #0033ff, #00ffff)';
+    document.body.style.background = '#030b1a';
     document.body.style.color = '#fff';
-    updateBoxStyle('#001133', '#00ccff');
+    updateBoxStyle('#04122a', '#6699ff');
+
+    if (!document.getElementById('starCanvas')) {
+      const canvas = document.createElement('canvas');
+      canvas.id = 'starCanvas';
+      canvas.style.position = 'fixed';
+      canvas.style.top = '0';
+      canvas.style.left = '0';
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      canvas.style.zIndex = '0';
+      document.body.prepend(canvas);
+      startStarfield(canvas);
+    }
   } else if (styleName === 'glitch') {
     document.body.style.background = 'black';
     document.body.style.color = '#ff00ff';
     updateBoxStyle('#111', '#ff00ff');
     document.body.style.animation = 'glitchy 1s infinite';
   } else {
-    resetStyle();
+    resetStyle(); // back to OG
   }
 }
 
@@ -372,9 +386,18 @@ function updateBoxStyle(bg, glow) {
 }
 
 function resetStyle() {
-  location.reload(); // lazy way but works 😎
+  resetCustomizations();
+  location.reload(); // og site look 💥
 }
-  </script>
+
+function resetCustomizations() {
+  document.body.style.animation = '';
+  const canvas = document.getElementById('starCanvas');
+  if (canvas) canvas.remove();
+}
+</script>  
+
+  
   
 </head>
 <body>
@@ -382,21 +405,19 @@ function resetStyle() {
   <header>
     <h1>Hackerz mod site</h1>
   </header>
-  <div style="text-align: center; padding: 10px; background-color: rgba(0,0,0,0.5);">
-  <label for="styleSelect" style="font-weight: bold;">Change Style: </label>
-  <select id="styleSelect" onchange="applyStyle(this.value)">
-    <option value="default">Default</option>
-    <option value="blushop">BluShop Remake</option>
-    <option value="glitch">Glitch Mode</option>
-  </select>
-  <button onclick="resetStyle()" class="mod-download" style="margin-left: 10px;">Reset</button>
-  </div>
+ <select onchange="applyStyle(this.value)">
+  <option value="">Default</option>
+  <option value="blushop">BluShop Remake</option>
+  <option value="glitch">Glitch Mode</option>
+      <button onclick="resetStyle()">Reset</button>
+ </select> 
 
   <div class="nav-tabs">
     <button onclick="showTab('mods', 'Mods')">Mods</button>
     <button onclick="showTab('apps', 'Apps')">Apps</button>
     <button onclick="showTab('stuff', 'Stuff Soon')">Stuff Soon</button>
     <button onclick="showTab('tools', 'Tools')">Tools</button>
+       
   </div>
 
   <div class="active-tab" id="active-tab-label">You are viewing: Mods</div>
@@ -627,6 +648,73 @@ function resetStyle() {
     const iframe = document.getElementById('videoPlayer');
     iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
   }
+  </script>
+  <script>
+function startStarfield(canvas) {
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function createStars() {
+    stars = [];
+    const count = 150;
+    for (let i = 0; i < count; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 2 + 1,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5
+      });
+    }
+  }
+
+  function drawStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let s of stars) {
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+      ctx.fillStyle = "white";
+      ctx.fill();
+
+      s.x += s.vx;
+      s.y += s.vy;
+
+      if (s.x < 0 || s.x > canvas.width) s.vx *= -1;
+      if (s.y < 0 || s.y > canvas.height) s.vy *= -1;
+    }
+
+    for (let i = 0; i < stars.length; i++) {
+      for (let j = i + 1; j < stars.length; j++) {
+        const dx = stars[i].x - stars[j].x;
+        const dy = stars[i].y - stars[j].y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 120) {
+          ctx.beginPath();
+          ctx.moveTo(stars[i].x, stars[i].y);
+          ctx.lineTo(stars[j].x, stars[j].y);
+          ctx.strokeStyle = "rgba(255,255,255,0.1)";
+          ctx.stroke();
+        }
+      }
+    }
+
+    requestAnimationFrame(drawStars);
+  }
+
+  window.addEventListener('resize', () => {
+    resizeCanvas();
+    createStars();
+  });
+
+  resizeCanvas();
+  createStars();
+  drawStars();
+}
   </script>
 </body>
 </html>

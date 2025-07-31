@@ -245,6 +245,14 @@
   cursor: pointer;
   text-shadow: 0 0 5px #ff00ff;
 }
+    @keyframes glitchy {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(2px, -2px); }
+  60% { transform: translate(-1px, 1px); }
+  80% { transform: translate(1px, -1px); }
+  100% { transform: translate(0, 0); }
+    }
   </style>
 
   <script>
@@ -337,6 +345,35 @@ function decodeBase64() {
   }
   document.getElementById('pwOutput').textContent = password;
     }
+    const originalStyles = document.documentElement.innerHTML;
+
+function applyStyle(styleName) {
+  if (styleName === 'blushop') {
+    document.body.style.background = 'linear-gradient(to bottom right, #0033ff, #00ffff)';
+    document.body.style.color = '#fff';
+    updateBoxStyle('#001133', '#00ccff');
+  } else if (styleName === 'glitch') {
+    document.body.style.background = 'black';
+    document.body.style.color = '#ff00ff';
+    updateBoxStyle('#111', '#ff00ff');
+    document.body.style.animation = 'glitchy 1s infinite';
+  } else {
+    resetStyle();
+  }
+}
+
+function updateBoxStyle(bg, glow) {
+  const cards = document.querySelectorAll('.styled-mod, .soon-box, .mod-download, .changelog-btn');
+  cards.forEach(card => {
+    card.style.backgroundColor = bg;
+    card.style.boxShadow = `0 0 15px ${glow}`;
+    card.style.border = `1px solid ${glow}`;
+  });
+}
+
+function resetStyle() {
+  location.reload(); // lazy way but works 😎
+}
   </script>
   
 </head>
@@ -345,6 +382,15 @@ function decodeBase64() {
   <header>
     <h1>Hackerz mod site</h1>
   </header>
+  <div style="text-align: center; padding: 10px; background-color: rgba(0,0,0,0.5);">
+  <label for="styleSelect" style="font-weight: bold;">Change Style: </label>
+  <select id="styleSelect" onchange="applyStyle(this.value)">
+    <option value="default">Default</option>
+    <option value="blushop">BluShop Remake</option>
+    <option value="glitch">Glitch Mode</option>
+  </select>
+  <button onclick="resetStyle()" class="mod-download" style="margin-left: 10px;">Reset</button>
+  </div>
 
   <div class="nav-tabs">
     <button onclick="showTab('mods', 'Mods')">Mods</button>

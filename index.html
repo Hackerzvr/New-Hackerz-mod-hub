@@ -319,6 +319,24 @@ function decodeBase64() {
     document.getElementById('base64Output').textContent = "Error decoding input.";
   }
 }
+    function generateQR() {
+  const text = document.getElementById('qrInput').value;
+  const qrResult = document.getElementById('qrResult');
+  if (text.trim() !== "") {
+    qrResult.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(text)}" alt="QR Code">`;
+  } else {
+    qrResult.innerHTML = "Type something first!";
+  }
+}
+    function generatePassword() {
+  const length = parseInt(document.getElementById('pwLength').value);
+  const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=";
+  let password = "";
+  for (let i = 0; i < length; i++) {
+    password += charset.charAt(Math.floor(Math.random() * charset.length));
+  }
+  document.getElementById('pwOutput').textContent = password;
+    }
   </script>
   
 </head>
@@ -417,6 +435,24 @@ function decodeBase64() {
     <button class="mod-download" onclick="document.getElementById('base64Tool').style.display = 'block';">Use Tool</button>
   </div>
 </div>
+  <!-- QR Code Generator Tool -->
+<div class="mod-card styled-mod">
+  <img src="https://via.placeholder.com/120x120.png?text=QR" class="mod-image" alt="QR Code Generator">
+  <div class="mod-text">
+    <h2>QR Code Generator</h2>
+    <p>Type anything and turn it into a QR code instantly. No spy cam needed 🛰️</p>
+    <button class="mod-download" onclick="document.getElementById('qrTool').style.display='block'">Use Tool</button>
+  </div>
+</div>
+  <!-- Password Generator Tool -->
+<div class="mod-card styled-mod">
+  <img src="https://via.placeholder.com/120x120.png?text=PW" class="mod-image" alt="Password Generator">
+  <div class="mod-text">
+    <h2>Password Generator</h2>
+    <p>Make strong hacker-style passwords faster than a speeding brute force 🚀</p>
+    <button class="mod-download" onclick="document.getElementById('pwTool').style.display='block'">Use Tool</button>
+  </div>
+</div>
 </div>
 
   
@@ -459,6 +495,24 @@ function decodeBase64() {
     <button onclick="decodeBase64()" class="changelog-btn" style="flex:1;">Decode</button>
   </div>
   <pre id="base64Output" style="margin-top:15px;word-wrap:break-word;"></pre>
+</div>
+
+  <!-- QR Code Generator Popup -->
+<div id="qrTool" class="changelog-popup" style="display:none;">
+  <button class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
+  <h3>QR Code Generator</h3>
+  <input id="qrInput" type="text" placeholder="Type something..." style="width:100%;padding:10px;margin-top:10px;">
+  <button class="changelog-btn" onclick="generateQR()" style="margin-top:10px;">Generate</button>
+  <div id="qrResult" style="margin-top:15px;text-align:center;"></div>
+</div>
+  <!-- Password Generator Popup -->
+<div id="pwTool" class="changelog-popup" style="display:none;">
+  <button class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
+  <h3>Password Generator</h3>
+  <label>Length:</label>
+  <input id="pwLength" type="number" min="4" max="64" value="12" style="width:60px;margin-left:10px;">
+  <button class="changelog-btn" onclick="generatePassword()" style="margin-left:10px;">Generate</button>
+  <pre id="pwOutput" style="margin-top:15px;word-wrap:break-word;"></pre>
 </div>
 </body>
 </html>

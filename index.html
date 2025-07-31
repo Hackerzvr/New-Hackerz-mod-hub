@@ -268,6 +268,57 @@
   window.onload = () => {
     showTab('mods', 'Mods');
   };
+
+    function sendWebhook() {
+  const url = document.getElementById('webhookURL').value;
+  const msg = document.getElementById('webhookMsg').value;
+  const delay = parseInt(document.getElementById('webhookDelay').value) || 0;
+
+  setTimeout(() => {
+    fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ content: msg })
+    }).then(res => {
+      alert("Message sent!");
+    }).catch(err => {
+      alert("Error sending message. Check webhook URL.");
+    });
+  }, delay * 1000);
+}
+
+function generateEmbed() {
+  const fileInput = document.getElementById('imgUpload');
+  const result = document.getElementById('embedResult');
+
+  if (fileInput.files.length === 0) {
+    result.textContent = "No file selected.";
+    return;
+  }
+
+  // Fake embed link, just for display
+  const fakeLink = "https://cdn.discordapp.com/attachments/fake/fake/" + fileInput.files[0].name;
+  result.textContent = "Discord Embed Link:\n" + fakeLink;
+}
+    function encodeBase64() {
+  const input = document.getElementById('base64Input').value;
+  try {
+    const encoded = btoa(unescape(encodeURIComponent(input)));
+    document.getElementById('base64Output').textContent = "Encoded:\n" + encoded;
+  } catch (e) {
+    document.getElementById('base64Output').textContent = "Error encoding input.";
+  }
+}
+
+function decodeBase64() {
+  const input = document.getElementById('base64Input').value;
+  try {
+    const decoded = decodeURIComponent(escape(atob(input)));
+    document.getElementById('base64Output').textContent = "Decoded:\n" + decoded;
+  } catch (e) {
+    document.getElementById('base64Output').textContent = "Error decoding input.";
+  }
+}
   </script>
   
 </head>
@@ -281,6 +332,7 @@
     <button onclick="showTab('mods', 'Mods')">Mods</button>
     <button onclick="showTab('apps', 'Apps')">Apps</button>
     <button onclick="showTab('stuff', 'Stuff Soon')">Stuff Soon</button>
+    <button onclick="showTab('tools', 'Tools')">Tools</button>
   </div>
 
   <div class="active-tab" id="active-tab-label">You are viewing: Mods</div>
@@ -335,6 +387,38 @@
       <p>soon!!</p>
     </div>
   </div>
+<!-- Tools Tab -->
+<div class="content-section" id="tools">
+  <!-- Webhook Message Tool -->
+  <div class="mod-card styled-mod">
+    <img src="https://via.placeholder.com/120.png?text=WEBHOOK" alt="Webhook Tool" class="mod-image">
+    <div class="mod-text">
+      <h2>Webhook Message Tool</h2>
+      <p>Send messages straight to your Discord webhook from the browser!</p>
+      <button class="mod-download" onclick="document.getElementById('webhookTool').style.display = 'block';">Use Tool</button>
+    </div>
+  </div>
+
+  <!-- GIF Embed Tool -->
+  <div class="mod-card styled-mod">
+    <img src="https://via.placeholder.com/120.png?text=EMBED" alt="Embed Tool" class="mod-image">
+    <div class="mod-text">
+      <h2>Discord GIF Embed Generator</h2>
+      <p>Upload a .PNG or .GIF and get a fake public Discord embed link!</p>
+      <button class="mod-download" onclick="document.getElementById('gifTool').style.display = 'block';">Use Tool</button>
+    </div>
+  </div>
+  <!-- Base64 Encoder/Decoder Tool -->
+<div class="mod-card styled-mod">
+  <img src="https://via.placeholder.com/120.png?text=BASE64" alt="Base64 Tool" class="mod-image">
+  <div class="mod-text">
+    <h2>Base64 Encoder/Decoder</h2>
+    <p>Convert text to Base64 or back with a click. Great for nerd stuff 👾</p>
+    <button class="mod-download" onclick="document.getElementById('base64Tool').style.display = 'block';">Use Tool</button>
+  </div>
+</div>
+</div>
+
   
   <div class="footer-buttons">
   <a href="https://discord.gg/jSrC4KvVfh" target="_blank">Join Discord</a>
@@ -346,5 +430,35 @@
   <pre id="changelogText">Changelog details go here.</pre>
   </div>
 
+  <!-- Webhook Tool Popup -->
+<div id="webhookTool" class="changelog-popup" style="display:none;">
+  <button class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
+  <h3>Send Webhook Message</h3>
+  <input type="text" id="webhookURL" placeholder="Enter Webhook URL" style="width:100%;padding:10px;margin:5px 0;">
+  <textarea id="webhookMsg" placeholder="Enter Message" style="width:100%;padding:10px;margin:5px 0;"></textarea>
+  <input type="number" id="webhookDelay" placeholder="Delay (seconds)" style="width:100%;padding:10px;margin:5px 0;">
+  <button onclick="sendWebhook()" style="margin-top:10px;" class="changelog-btn">Send</button>
+</div>
+
+<!-- GIF Embed Generator -->
+<div id="gifTool" class="changelog-popup" style="display:none;">
+  <button class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
+  <h3>GIF / PNG to Embed Link</h3>
+  <input type="file" id="imgUpload" accept="image/png, image/gif" style="margin:10px 0;">
+  <p><em>This will simulate uploading and show a fake embed link.</em></p>
+  <button onclick="generateEmbed()" class="changelog-btn">Get Embed Link</button>
+  <pre id="embedResult" style="margin-top:10px;"></pre>
+</div>
+<!-- Base64 Encoder/Decoder Popup -->
+<div id="base64Tool" class="changelog-popup" style="display:none;">
+  <button class="close-btn" onclick="this.parentElement.style.display='none'">×</button>
+  <h3>Base64 Encoder / Decoder</h3>
+  <textarea id="base64Input" placeholder="Enter text here..." style="width:100%;padding:10px;margin-top:10px;height:80px;"></textarea>
+  <div style="display:flex;gap:10px;margin-top:10px;">
+    <button onclick="encodeBase64()" class="changelog-btn" style="flex:1;">Encode</button>
+    <button onclick="decodeBase64()" class="changelog-btn" style="flex:1;">Decode</button>
+  </div>
+  <pre id="base64Output" style="margin-top:15px;word-wrap:break-word;"></pre>
+</div>
 </body>
 </html>

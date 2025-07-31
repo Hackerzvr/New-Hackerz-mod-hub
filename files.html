@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mod Files</title>
+  <style>
+    body {
+      background: linear-gradient(270deg, #ff0044, #8000ff);
+      background-size: 400% 400%;
+      animation: bgShift 10s infinite linear;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      padding: 30px;
+    }
+
+    @keyframes bgShift {
+      0% { background-position: 0% 50%; }
+      25% { background-position: 50% 0%; }
+      50% { background-position: 100% 50%; }
+      75% { background-position: 50% 100%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 32px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #00ffff;
+    }
+
+    .file-link {
+      display: block;
+      background-color: #000000cc;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 15px auto;
+      width: 90%;
+      max-width: 600px;
+      text-align: center;
+      color: #00ffff;
+      text-decoration: none;
+      font-size: 18px;
+      box-shadow: 0 0 10px #00ffff;
+      transition: 0.3s;
+    }
+
+    .file-link:hover {
+      background-color: #000;
+      box-shadow: 0 0 20px #00ffff;
+    }
+
+    .back-btn {
+      display: block;
+      margin: 20px auto;
+      text-align: center;
+      color: #fff;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Download Mod Files</h1>
+
+  <!-- Example file links -->
+  <a class="file-link" href="https://your-file-link-here.com/mod1.zip" target="_blank">Download Neon Speed Glitch</a>
+  <a class="file-link" href="https://your-file-link-here.com/mod2.zip" target="_blank">Download Laser Shoes Mod</a>
+
+  <a href="Main.html" class="back-btn">← Back to Home</a>
+</body>
+</html>

@@ -9,7 +9,8 @@
       animation: bgShift 10s infinite linear;
       font-family: 'Segoe UI', sans-serif;
       color: white;
-      padding: 30px;
+      padding: 0;
+      margin: 0;
     }
 
     @keyframes bgShift {
@@ -20,25 +21,79 @@
       100% { background-position: 0% 50%; }
     }
 
-    h1 {
+    header {
       text-align: center;
-      font-size: 32px;
-      margin-bottom: 20px;
+      padding: 25px;
       text-shadow: 0 0 10px #00ffff;
+    }
+
+    .nav-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      padding: 15px 0;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-tabs button {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid #fff;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .nav-tabs button:hover {
+      background: #00000099;
+    }
+
+    .active-tab {
+      text-align: center;
+      padding: 10px;
+      font-size: 18px;
+      background-color: rgba(0, 0, 0, 0.3);
+      border-top: 2px solid white;
+      border-bottom: 2px solid white;
+    }
+
+    .content-section {
+      display: none;
+      padding: 30px 20px;
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    .download-box {
+      background-color: #330066;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 500px;
+      border-radius: 15px;
+      text-align: center;
+      box-shadow: 0 0 15px #00ffff;
+    }
+
+    .download-box h2 {
+      margin-bottom: 15px;
+      color: #00ffff;
+      text-shadow: 0 0 5px #00ffff;
     }
 
     .file-link {
       display: block;
       background-color: #000000cc;
-      padding: 15px;
+      padding: 12px;
       border-radius: 10px;
-      margin: 15px auto;
-      width: 90%;
-      max-width: 600px;
-      text-align: center;
+      margin: 10px auto;
+      width: 80%;
+      max-width: 300px;
       color: #00ffff;
       text-decoration: none;
-      font-size: 18px;
+      font-size: 16px;
       box-shadow: 0 0 10px #00ffff;
       transition: 0.3s;
     }
@@ -50,20 +105,78 @@
 
     .back-btn {
       display: block;
-      margin: 20px auto;
+      margin: 30px auto;
       text-align: center;
       color: #fff;
       text-decoration: underline;
     }
   </style>
+
+  <script>
+    function showTab(tabId, label) {
+      const sections = document.querySelectorAll('.content-section');
+      sections.forEach(section => section.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      document.getElementById('active-tab-label').textContent = "You are viewing: " + label;
+    }
+
+    window.onload = () => {
+      showTab('mod-files', 'Mod Files');
+    };
+  </script>
 </head>
+
 <body>
-  <h1>Download Mod Files</h1>
+  <header>
+    <h1>Download The Files</h1>
+  </header>
 
-  <!-- Example file links -->
-  <a class="file-link" href="https://your-file-link-here.com/mod1.zip" target="_blank">Download Neon Speed Glitch</a>
-  <a class="file-link" href="https://your-file-link-here.com/mod2.zip" target="_blank">Download Laser Shoes Mod</a>
+  <div class="nav-tabs">
+    <button onclick="showTab('mod-files', 'Mod Files')">Mod Files</button>
+    <button onclick="showTab('app-files', 'App Files')">App Files</button>
+    <button onclick="showTab('stuff-files', 'Stuff Files')">Stuff Files</button>
+  </div>
 
-  <a href="Main.html" class="back-btn">← Back to Home</a>
+  <div class="active-tab" id="active-tab-label">You are viewing: Mod Files</div>
+
+  <!-- Mod Files Tab -->
+  <div class="content-section active" id="mod-files">
+    <div class="download-box">
+      <h2>Gorilla Time</h2>
+      <a class="file-link" href="https://drive.google.com/uc?export=download&id=17hUf9nzQokSSNVT2rqsUBJYBoC-nSD-G" target="_blank">Download Gorilla Time</a>
+      <a class="file-link" href="#">Download Source Code "soon"</a>
+    </div>
+
+    <div class="download-box">
+      <h2>Mosa speed ui</h2>
+      <a class="file-link" href="https://drive.google.com/uc?export=download&id=17poTILFQ_00g9lQswYl6akVucMUWqyZh">Download mosa speed</a>
+      <a class="file-link" href="#">Download Source Code "soon"</a>
+    </div>
+        <div class="download-box">
+      <h2>HACKERZ PLAYER INFO</h2>
+      <a class="file-link" href="https://drive.google.com/uc?export=download&id=17pm0YZBS9rlwMiYsYaJvgJEAKi9T0HNN">Download INFO UI</a>
+      <a class="file-link" href="#">Download Source Code "soon"</a>
+    </div>
+  </div>
+
+  <!-- App Files Tab -->
+  <div class="content-section" id="app-files">
+    <div class="download-box">
+      <h2>App Placeholder</h2>
+      <a class="file-link" href="#">Download App (Coming Soon)</a>
+      <a class="file-link" href="#">Source Code (Coming Soon)</a>
+    </div>
+  </div>
+
+  <!-- Stuff Files Tab -->
+  <div class="content-section" id="stuff-files">
+    <div class="download-box">
+      <h2>skibidi holder</h2>
+      <a class="file-link" href="#">hi</a>
+      <a class="file-link" href="#">hello</a>
+    </div>
+  </div>
+
+  <a href="index.html" class="back-btn">← Back to Home</a>
 </body>
 </html>

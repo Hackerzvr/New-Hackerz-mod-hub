@@ -186,6 +186,65 @@
   background-color: #000;
   box-shadow: 0 0 20px #00ffff;
 }
+    .changelog-btn {
+  display: inline-block;
+  background-color: #222;
+  color: #00ffff;
+  padding: 10px 16px;
+  margin-top: 10px;
+  border: 1px solid #00ffff;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+  box-shadow: 0 0 10px #00ffff;
+}
+
+.changelog-btn:hover {
+  background-color: #000;
+  box-shadow: 0 0 20px #00ffff;
+}
+
+.changelog-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: linear-gradient(135deg, rgba(0,255,255,0.7), rgba(128,0,255,0.7));
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 0 25px #00ffff;
+  max-width: 90%;
+  width: 400px;
+  z-index: 9999;
+  display: none;
+  color: #fff;
+  backdrop-filter: blur(10px);
+}
+
+.changelog-popup h3 {
+  margin-top: 0;
+  font-size: 20px;
+  text-shadow: 0 0 5px #00ffff;
+}
+
+.changelog-popup pre {
+  white-space: pre-wrap;
+  font-size: 14px;
+  margin-top: 10px;
+  color: #fff;
+}
+
+.changelog-popup .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+  text-shadow: 0 0 5px #ff00ff;
+}
   </style>
 
   <script>
@@ -200,6 +259,24 @@
     window.onload = () => {
       showTab('mods', 'Mods'); // Default tab
     };
+
+    <div class="changelog-popup" id="changelogPopup">
+  <button class="close-btn" onclick="closeChangelog()">×</button>
+  <h3 id="changelogTitle">Mod Name</h3>
+  <pre id="changelogText">Changelog details go here.</pre>
+</div>
+
+<script>
+  function openChangelog(modName, changes) {
+    document.getElementById("changelogTitle").textContent = modName + " Changelog";
+    document.getElementById("changelogText").textContent = changes;
+    document.getElementById("changelogPopup").style.display = "block";
+  }
+
+  function closeChangelog() {
+    document.getElementById("changelogPopup").style.display = "none";
+  }
+</script>
   </script>
 </head>
 <body>
@@ -225,6 +302,7 @@
         <p>This mod lets you change the time of day-night with a simple ui. to open prees g</p>
         <a href="files.html" class="mod-download">Go to Files</a>
       </div>
+      <button class="changelog-btn" onclick="openChangelog('Gorilla Time', 'nothing yet')">View Changelog</button>
     </div>
     <div class="mod-card styled-mod">
   <img src="image2.png" alt="" class="mod-image">
@@ -233,6 +311,7 @@
     <p>This mod lets you change your speed in  game with two mod toggles and a settings tab "press m to open"</p>
     <a href="files.html" class="mod-download">Go to Files</a>
   </div>
+      <button class="changelog-btn" onclick="openChangelog('Mosa Speed UI', '• Speed toggle improved\n• New Settings tab')">View Changelog</button>
 </div>
     <div class="mod-card styled-mod">
   <img src="image3.png" alt="" class="mod-image">
@@ -241,6 +320,7 @@
     <p>This mod lets you see tue leaderbored master client an peoples player ids all in a ui</p>
     <a href="files.html" class="mod-download">Go to Files</a>
   </div>
+  <button class="changelog-btn" onclick="openChangelog('HACKERZ PLAYER INFO UI', 'skib')">View Changelog</button>    
 </div>
  </div>
 

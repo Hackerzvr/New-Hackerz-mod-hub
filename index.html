@@ -248,25 +248,13 @@
   </style>
 
   <script>
-    function showTab(tabId, label) {
-      const sections = document.querySelectorAll('.content-section');
-      sections.forEach(section => section.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
+  function showTab(tabId, label) {
+    const sections = document.querySelectorAll('.content-section');
+    sections.forEach(section => section.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    document.getElementById('active-tab-label').textContent = "You are viewing: " + label;
+  }
 
-      document.getElementById('active-tab-label').textContent = "You are viewing: " + label;
-    }
-
-    window.onload = () => {
-      showTab('mods', 'Mods'); // Default tab
-    };
-
-    <div class="changelog-popup" id="changelogPopup">
-  <button class="close-btn" onclick="closeChangelog()">×</button>
-  <h3 id="changelogTitle">Mod Name</h3>
-  <pre id="changelogText">Changelog details go here.</pre>
-</div>
-
-<script>
   function openChangelog(modName, changes) {
     document.getElementById("changelogTitle").textContent = modName + " Changelog";
     document.getElementById("changelogText").textContent = changes;
@@ -276,8 +264,12 @@
   function closeChangelog() {
     document.getElementById("changelogPopup").style.display = "none";
   }
-</script>
+
+  window.onload = () => {
+    showTab('mods', 'Mods');
+  };
   </script>
+  
 </head>
 <body>
 

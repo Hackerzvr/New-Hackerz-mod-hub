@@ -17,6 +17,11 @@
       background-size: 400% 400%;
       color: #fff;
     }
+    @keyframes redSpazz {
+  0%   { filter: hue-rotate(0deg); }
+  50%  { filter: hue-rotate(90deg) brightness(1.2) contrast(1.5); }
+  100% { filter: hue-rotate(0deg); }
+    }
 
     @keyframes bgShift {
       0% { background-position: 0% 50%; }
@@ -363,6 +368,7 @@ function decodeBase64() {
     <option value="">Default</option>
     <option value="blushop">BluShop Remake</option>
     <option value="glitch">Glitch Mode</option>
+    <option value="tvstatic">TV Static Chaos</option>
   </select>
 </div>
 
@@ -633,6 +639,24 @@ function applyStyle(styleName) {
   } else {
     resetStyle(); // Back to OG
   }
+  } else if (styleName === 'tvstatic') {
+  document.body.style.background = 'black';
+  document.body.style.color = '#ff3333';
+  updateBoxStyle('#111', '#ff3333');
+  document.body.style.animation = 'redSpazz 0.3s infinite';
+
+  if (!document.getElementById('tvStaticCanvas')) {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'tvStaticCanvas';
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.zIndex = '0';
+    document.body.prepend(canvas);
+    drawTVStatic(canvas);
+  }
 }
 
 function updateBoxStyle(bg, glow) {
@@ -717,6 +741,31 @@ function startStarfield(canvas) {
     resizeCanvas();
     createStars();
   });
+
+  function drawTVStatic(canvas) {
+  const ctx = canvas.getContext('2d');
+  function renderStatic() {
+    const imgData = ctx.createImageData(canvas.width, canvas.height);
+    for (let i = 0; i < imgData.data.length; i += 4) {
+      const val = Math.random() * 255;
+      imgData.data[i] = val;
+      imgData.data[i + 1] = val;
+      imgData.data[i + 2] = val;
+      imgData.data[i + 3] = 255;
+    }
+    ctx.putImageData(imgData, 0, 0);
+    requestAnimationFrame(renderStatic);
+  }
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  resize();
+  renderStatic();
+  window.addEventListener('resize', resize);
+              }
 }
   </script>
 </body>

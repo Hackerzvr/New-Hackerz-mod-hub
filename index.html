@@ -747,26 +747,220 @@ function startStarfield(canvas) {
   function renderStatic() {
     const imgData = ctx.createImageData(canvas.width, canvas.height);
     for (let i = 0; i < imgData.data.length; i += 4) {
-      const val = Math.random() * 255;
-      imgData.data[i] = val;
-      imgData.data[i + 1] = val;
-      imgData.data[i + 2] = val;
-      imgData.data[i + 3] = 255;
+<script>
+  let videoList = [];
+  let currentIndex = 0;
+
+  function loadVideos() {
+    const input = document.getElementById('videoInput').value.trim();
+    videoList = input.split('\n').map(url => url.trim()).filter(url => url);
+    currentIndex = 0;
+    if (videoList.length > 0) {
+      showVideo(currentIndex);
     }
-    ctx.putImageData(imgData, 0, 0);
-    requestAnimationFrame(renderStatic);
   }
 
-  function resize() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+  function showVideo(index) {
+    const videoId = extractVideoID(videoList[index]);
+    const player = document.getElementById('videoPlayer');
+    if (videoId) {
+      player.src = `https://www.youtube.com/embed/${videoId}?enablejsapi=1`;
+    } else {
+      player.src = '';
+    }
   }
 
-  resize();
-  renderStatic();
-  window.addEventListener('resize', resize);
-              }
-}
-  </script>
+  function extractVideoID(url) {
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/.*v=)([^&]+)/);
+    return match ? match[1] : null;
+  }
+
+  function nextVideo() {
+    if (currentIndex < videoList.length - 1) {
+      currentIndex++;
+      showVideo(currentIndex);
+    }
+  }
+
+  function prevVideo() {
+    if (currentIndex > 0) {
+      currentIndex--;
+      showVideo(currentIndex);
+    }
+  }
+
+  function playVideo() {
+    const iframe = document.getElementById('videoPlayer');
+    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+  }
+
+  function pauseVideo() {
+    const iframe = document.getElementById('videoPlayer');
+    iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+  }
+
+  function applyStyle(styleName) {
+    resetCustomizations(); // Reset previous
+
+    if (styleName === 'blushop') {
+      document.body.style.background = '#030b1a';
+      document.body.style.color = '#fff';
+      updateBoxStyle('#04122a', '#6699ff');
+
+      if (!document.getElementById('starCanvas')) {
+        const canvas = document.createElement('canvas');
+        canvas.id = 'starCanvas';
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.zIndex = '0';
+        document.body.prepend(canvas);
+        startStarfield(canvas);
+      }
+
+    } else if (styleName === 'glitch') {
+      document.body.style.background = 'black';
+      document.body.style.color = '#ff00ff';
+      updateBoxStyle('#111', '#ff00ff');
+      document.body.style.animation = 'glitchy 1s infinite';
+    
+    } else if (styleName === 'tvstatic') {
+      document.body.style.background = 'black';
+      document.body.style.color = '#ff3333';
+      updateBoxStyle('#111', '#ff3333');
+      document.body.style.animation = 'redSpazz 0.3s infinite';
+
+      if (!document.getElementById('tvStaticCanvas')) {
+        const canvas = document.createElement('canvas');
+        canvas.id = 'tvStaticCanvas';
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0';
+        canvas.style.left = '0';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.zIndex = '0';
+        document.body.prepend(canvas);
+        drawTVStatic(canvas);
+      }
+
+    } else {
+      resetStyle(); // Back to OG
+    }
+  }
+
+  function updateBoxStyle(bg, glow) {
+    const cards = document.querySelectorAll('.styled-mod, .soon-box, .mod-download, .changelog-btn');
+    cards.forEach(card => {
+      card.style.backgroundColor = bg;
+      card.style.boxShadow = `0 0 15px ${glow}`;
+      card.style.border = `1px solid ${glow}`;
+    });
+  }
+
+  function resetStyle() {
+    resetCustomizations();
+    location.reload(); // lazy reset
+  }
+
+  function resetCustomizations() {
+    document.body.style.animation = '';
+    const starCanvas = document.getElementById('starCanvas');
+    const staticCanvas = document.getElementById('tvStaticCanvas');
+    if (starCanvas) starCanvas.remove();
+    if (staticCanvas) staticCanvas.remove();
+  }
+
+  function startStarfield(canvas) {
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function createStars() {
+      stars = [];
+      for (let i = 0; i < 150; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          radius: Math.random() * 2 + 1,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5
+        });
+      }
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let s of stars) {
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "white";
+        ctx.fill();
+
+        s.x += s.vx;
+        s.y += s.vy;
+
+        if (s.x < 0 || s.x > canvas.width) s.vx *= -1;
+        if (s.y < 0 || s.y > canvas.height) s.vy *= -1;
+      }
+
+      for (let i = 0; i < stars.length; i++) {
+        for (let j = i + 1; j < stars.length; j++) {
+          const dx = stars[i].x - stars[j].x;
+          const dy = stars[i].y - stars[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(stars[i].x, stars[i].y);
+            ctx.lineTo(stars[j].x, stars[j].y);
+            ctx.strokeStyle = "rgba(255,255,255,0.1)";
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(drawStars);
+    }
+
+    resizeCanvas();
+    createStars();
+    drawStars();
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      createStars();
+    });
+  }
+
+  function drawTVStatic(canvas) {
+    const ctx = canvas.getContext('2d');
+
+    function renderStatic() {
+      const imgData = ctx.createImageData(canvas.width, canvas.height);
+      for (let i = 0; i < imgData.data.length; i += 4) {
+        const val = Math.random() * 255;
+        imgData.data[i] = val;
+        imgData.data[i + 1] = val;
+        imgData.data[i + 2] = val;
+        imgData.data[i + 3] = 255;
+      }
+      ctx.putImageData(imgData, 0, 0);
+      requestAnimationFrame(renderStatic);
+    }
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    resize();
+    renderStatic();
+    window.addEventListener('resize', resize);
+  }
+</script>
 </body>
 </html>

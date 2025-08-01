@@ -346,55 +346,7 @@ function decodeBase64() {
   document.getElementById('pwOutput').textContent = password;
     }
   
-function applyStyle(styleName) {
-  resetCustomizations(); // Clean up first
 
-  if (styleName === 'blushop') {
-    document.body.style.background = '#030b1a';
-    document.body.style.color = '#fff';
-    updateBoxStyle('#04122a', '#6699ff');
-
-    if (!document.getElementById('starCanvas')) {
-      const canvas = document.createElement('canvas');
-      canvas.id = 'starCanvas';
-      canvas.style.position = 'fixed';
-      canvas.style.top = '0';
-      canvas.style.left = '0';
-      canvas.style.width = '100%';
-      canvas.style.height = '100%';
-      canvas.style.zIndex = '0';
-      document.body.prepend(canvas);
-      startStarfield(canvas);
-    }
-  } else if (styleName === 'glitch') {
-    document.body.style.background = 'black';
-    document.body.style.color = '#ff00ff';
-    updateBoxStyle('#111', '#ff00ff');
-    document.body.style.animation = 'glitchy 1s infinite';
-  } else {
-    resetStyle(); // back to OG
-  }
-}
-
-function updateBoxStyle(bg, glow) {
-  const cards = document.querySelectorAll('.styled-mod, .soon-box, .mod-download, .changelog-btn');
-  cards.forEach(card => {
-    card.style.backgroundColor = bg;
-    card.style.boxShadow = `0 0 15px ${glow}`;
-    card.style.border = `1px solid ${glow}`;
-  });
-}
-
-function resetStyle() {
-  resetCustomizations();
-  location.reload(); // og site look 💥
-}
-
-function resetCustomizations() {
-  document.body.style.animation = '';
-  const canvas = document.getElementById('starCanvas');
-  if (canvas) canvas.remove();
-}
 </script>  
 
   
@@ -405,12 +357,14 @@ function resetCustomizations() {
   <header>
     <h1>Hackerz mod site</h1>
   </header>
- <select onchange="applyStyle(this.value)">
-  <option value="">Default</option>
-  <option value="blushop">BluShop Remake</option>
-  <option value="glitch">Glitch Mode</option>
-      <button onclick="resetStyle()">Reset</button>
- </select> 
+<div style="text-align: center; margin-top: 10px;">
+  <label for="styleSelect" style="color: white; font-weight: bold;">Site Style:</label>
+  <select id="styleSelect" onchange="applyStyle(this.value)" style="padding: 6px 12px; border-radius: 6px;">
+    <option value="">Default</option>
+    <option value="blushop">BluShop Remake</option>
+    <option value="glitch">Glitch Mode</option>
+  </select>
+</div>
 
   <div class="nav-tabs">
     <button onclick="showTab('mods', 'Mods')">Mods</button>
@@ -521,7 +475,7 @@ function resetCustomizations() {
   </div>
 </div>
   <div class="mod-card styled-mod">
-  <h2>📺 HaxTube Player</h2>
+  <h2>MeTube Player</h2>
   <p>Paste multiple YouTube URLs and control playback below:</p>
   
   <textarea id="videoInput" placeholder="Paste one YouTube URL per line..." style="width: 100%; height: 100px; margin-bottom: 10px; border-radius: 10px; padding: 10px;"></textarea>
@@ -650,6 +604,57 @@ function resetCustomizations() {
   }
   </script>
   <script>
+function applyStyle(styleName) {
+  resetCustomizations(); // Reset previous
+
+  if (styleName === 'blushop') {
+    document.body.style.background = '#030b1a';
+    document.body.style.color = '#fff';
+    updateBoxStyle('#04122a', '#6699ff');
+
+    if (!document.getElementById('starCanvas')) {
+      const canvas = document.createElement('canvas');
+      canvas.id = 'starCanvas';
+      canvas.style.position = 'fixed';
+      canvas.style.top = '0';
+      canvas.style.left = '0';
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      canvas.style.zIndex = '0';
+      document.body.prepend(canvas);
+      startStarfield(canvas);
+    }
+
+  } else if (styleName === 'glitch') {
+    document.body.style.background = 'black';
+    document.body.style.color = '#ff00ff';
+    updateBoxStyle('#111', '#ff00ff');
+    document.body.style.animation = 'glitchy 1s infinite';
+  } else {
+    resetStyle(); // Back to OG
+  }
+}
+
+function updateBoxStyle(bg, glow) {
+  const cards = document.querySelectorAll('.styled-mod, .soon-box, .mod-download, .changelog-btn');
+  cards.forEach(card => {
+    card.style.backgroundColor = bg;
+    card.style.boxShadow = `0 0 15px ${glow}`;
+    card.style.border = `1px solid ${glow}`;
+  });
+}
+
+function resetStyle() {
+  resetCustomizations();
+  location.reload(); // lazy reset
+}
+
+function resetCustomizations() {
+  document.body.style.animation = '';
+  const canvas = document.getElementById('starCanvas');
+  if (canvas) canvas.remove();
+}
+
 function startStarfield(canvas) {
   const ctx = canvas.getContext('2d');
   let stars = [];
@@ -661,8 +666,7 @@ function startStarfield(canvas) {
 
   function createStars() {
     stars = [];
-    const count = 150;
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < 150; i++) {
       stars.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
@@ -706,14 +710,13 @@ function startStarfield(canvas) {
     requestAnimationFrame(drawStars);
   }
 
+  resizeCanvas();
+  createStars();
+  drawStars();
   window.addEventListener('resize', () => {
     resizeCanvas();
     createStars();
   });
-
-  resizeCanvas();
-  createStars();
-  drawStars();
 }
   </script>
 </body>
